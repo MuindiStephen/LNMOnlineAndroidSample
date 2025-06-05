@@ -2,7 +2,7 @@ package com.myduka.app.api.interceptor;
 
 
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 
 import java.io.IOException;

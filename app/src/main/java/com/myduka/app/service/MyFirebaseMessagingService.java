@@ -20,7 +20,6 @@ package com.myduka.app.service;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -32,6 +31,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.myduka.app.util.AppConstants.PUSH_NOTIFICATION;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 /**
  * Created  on 6/30/2017.

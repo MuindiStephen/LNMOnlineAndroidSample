@@ -1,7 +1,8 @@
 package com.myduka.app.api.interceptor;
 
-import android.support.annotation.NonNull;
 import android.util.Base64;
+
+import androidx.annotation.NonNull;
 
 import com.myduka.app.BuildConfig;
 import com.myduka.app.api.ApiClient;

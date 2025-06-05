@@ -23,8 +23,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -38,6 +36,9 @@ import com.myduka.app.util.SharedPrefsUtil;
 import static com.myduka.app.util.AppConstants.PUSH_NOTIFICATION;
 import static com.myduka.app.util.AppConstants.REGISTRATION_COMPLETE;
 import static com.myduka.app.util.AppConstants.TOPIC_GLOBAL;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class NotificationActivity extends AppCompatActivity {
 

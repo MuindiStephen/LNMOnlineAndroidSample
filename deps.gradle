@@ -10,7 +10,7 @@ def versions = [
         gson            : '2.8.2',
         okio            : '1.14.0',
         sweetalert      : 'v1.4.0',
-        butterknife     : '8.8.1',
+        butterknife     : '10.2.3',
         networkmanager  : '0.0.2',
         circleimageview : '2.2.0',
         jUnit           : '4.12',

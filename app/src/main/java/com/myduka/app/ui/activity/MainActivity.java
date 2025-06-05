@@ -25,14 +25,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,11 +36,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.myduka.app.R;
 import com.myduka.app.api.ApiClient;
 import com.myduka.app.api.model.AccessToken;
 import com.myduka.app.api.model.STKPush;
+import com.myduka.app.databinding.ActivityMainBinding;
 import com.myduka.app.ui.RecyclerviewListDecorator;
 import com.myduka.app.ui.adapter.CartListAdapter;
 import com.myduka.app.ui.callback.PriceTransfer;
@@ -57,9 +53,6 @@ import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -74,13 +67,17 @@ import static com.myduka.app.util.AppConstants.REGISTRATION_COMPLETE;
 import static com.myduka.app.util.AppConstants.TOPIC_GLOBAL;
 import static com.myduka.app.util.AppConstants.TRANSACTION_TYPE;
 
-public class MainActivity extends AppCompatActivity implements PriceTransfer {
+import androidx.appcompat.app.*;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-    @BindView(R.id.cart_list)
+public class MainActivity extends androidx.appcompat.app.AppCompatActivity implements PriceTransfer {
+
+    //@BindView(R.id.cart_list)
     RecyclerView mRecyclerViewCartList;
-    @BindView(R.id.txt_response)
+    //@BindView(R.id.txt_response)
     TextView mTVResponse;
-    @BindView(R.id.buttonCheckout)
+   // @BindView(R.id.buttonCheckout)
     Button mButtonCheckout;
 
     private String mFireBaseRegId;
@@ -90,24 +87,43 @@ public class MainActivity extends AppCompatActivity implements PriceTransfer {
     private ApiClient mApiClient;
     private ArrayList<Integer> mPriceArrayList = new ArrayList<>();
 
+    private ActivityMainBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+       // ButterKnife.bind(this);
+
+        Button checkoutBtn = findViewById(R.id.buttonCheckout);
+        checkoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mPriceArrayList.size() > 0) {
+                    showCheckoutDialog();
+                }
+            }
+        });
 
         mProgressDialog = new ProgressDialog(this);
         mSharedPrefsUtil = new SharedPrefsUtil(this);
         mApiClient = new ApiClient();
         mApiClient.setIsDebug(true); //Set True to enable logging, false to disable.
 
+
+
         getAccessToken();
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false);
+        androidx.recyclerview.widget.LinearLayoutManager layoutManager = new androidx.recyclerview.widget.LinearLayoutManager(MainActivity.this, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false);
+
+
+        mRecyclerViewCartList = findViewById(R.id.cart_list);
+        mButtonCheckout = findViewById(R.id.buttonCheckout);
 
         mRecyclerViewCartList.setLayoutManager(layoutManager);
         mRecyclerViewCartList.addItemDecoration(new RecyclerviewListDecorator(MainActivity.this,
-                LinearLayoutManager.HORIZONTAL));
+                androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL));
 
         ArrayList<String> cartItems = new ArrayList<>();
         cartItems.add("Tomatoes");
@@ -143,16 +159,19 @@ public class MainActivity extends AppCompatActivity implements PriceTransfer {
         getFirebaseRegId();
     }
 
-    @OnClick({R.id.buttonCheckout})
+
+
+/*
+    // @OnClick({R.id.buttonCheckout})
     public void onClickViews(View view) {
-        switch (view.getId()) {
-            case R.id.buttonCheckout:
-                if (mPriceArrayList.size() > 0)
-                    //Calling getPhoneNumber method.
-                    showCheckoutDialog();
-                break;
+        if (view.getId() == R.id.buttonCheckout) {
+            if (mPriceArrayList.size() > 0)
+                //Calling getPhoneNumber method.
+                showCheckoutDialog();
         }
     }
+
+ */
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -170,22 +189,20 @@ public class MainActivity extends AppCompatActivity implements PriceTransfer {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_checkout:
-                Snackbar.make(findViewById(R.id.pay_layout), "Item 1 Selected", Snackbar.LENGTH_LONG)
-                        .setActionTextColor(Color.RED)
-                        .show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.action_checkout) {
+            Snackbar.make(findViewById(R.id.pay_layout), "Item 1 Selected", Snackbar.LENGTH_LONG)
+                    .setActionTextColor(Color.RED)
+                    .show();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     public void getAccessToken() {
         mApiClient.setGetAccessToken(true);
         mApiClient.mpesaService().getAccessToken().enqueue(new Callback<AccessToken>() {
             @Override
-            public void onResponse(@NonNull Call<AccessToken> call, @NonNull Response<AccessToken> response) {
+            public void onResponse(@NonNull Call<AccessToken> call, @androidx.annotation.NonNull Response<AccessToken> response) {
 
                 if (response.isSuccessful()) {
                     mApiClient.setAuthToken(response.body().accessToken);
@@ -193,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements PriceTransfer {
             }
 
             @Override
-            public void onFailure(@NonNull Call<AccessToken> call, @NonNull Throwable t) {
+            public void onFailure(@androidx.annotation.NonNull Call<AccessToken> call, @androidx.annotation.NonNull Throwable t) {
 
             }
         });

@@ -33,7 +33,6 @@ import android.media.RingtoneManager;
 import android.net.ParseException;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v4.app.NotificationCompat;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -51,6 +50,8 @@ import java.util.List;
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static com.myduka.app.util.AppConstants.NOTIFICATION_ID;
 import static com.myduka.app.util.AppConstants.NOTIFICATION_ID_BIG_IMAGE;
+
+import androidx.core.app.NotificationCompat;
 
 /**
  * Created  on 6/30/2017.
